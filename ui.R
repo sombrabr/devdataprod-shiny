@@ -17,6 +17,7 @@ shinyUI(fluidPage(
   p("This application will estimate an old car stop distance from its speed. The model was built from a 1920's speed x stop distance dataset, from the R datasets' library."),
   p("The model is more or less accurate until 25 mph."),
   p("To use the application, select the units you want to use and type the speed in the text input box. The result will appear at the right panel with a plot pointing the result in relation to the cars in the dataset."),
+  p("The source code for this application is at", a(href='https://github.com/sombrabr/devdataprod-shiny', "github.com/sombrabr/devdataprod-shiny"), "."),
   
   # Sidebar to choose the units and the speed
   sidebarLayout(
