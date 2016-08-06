@@ -34,7 +34,7 @@ toMeters <- function(ft) {
 #
 # Using the distance in natural log because the data is not very linear.
 set.seed(123)
-modelFit <- train(log(dist) ~ speed, data=cars, method="glm")
+modelFit <- train(sqrt(dist) ~ speed, data=cars, method="glm")
 
 #' Runs the shiny server
 shinyServer(function(input, output) {
@@ -56,7 +56,7 @@ shinyServer(function(input, output) {
   # Predicts the stop distance, in feet.
   # Doing an exponential because the training had the distance in natural log.
   getStopDist <- reactive({
-    prediction.ft <- exp(predict(modelFit, data.frame(speed=getSpeed())));
+    prediction.ft <- predict(modelFit, data.frame(speed=getSpeed()))^2;
     if(input$units == 1) {
       toMeters(prediction.ft)
     } else {
