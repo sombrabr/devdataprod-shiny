@@ -9,6 +9,9 @@ library(shiny)
 library(caret)
 library(datasets)
 
+# Units
+units = data.frame(speed=c("km/h", "mph"), dist=c("m", "ft"))
+
 #' Converts km/h to mph.
 #' 
 #' @param kmh the speed in km/h
@@ -43,7 +46,6 @@ shinyServer(function(input, output) {
       need(input$units == 1 || input$units == 2, "The units is invalid")
     )
     
-    
     if(input$units == 1) {
       toMph(input$speed)
     } else {
@@ -64,21 +66,37 @@ shinyServer(function(input, output) {
   
   # Creates the HTML output, in the desired units.
   output$result <- renderText({
+
+    paste('And old car at <span style="font-weight: bold;">',
+          input$speed,
+          '</span> ',
+          units[input$units, 'speed'],
+          ' will stop in <h3 style="display: inline-block;">',
+          round(getStopDist(), 2),
+          '</h3> ',
+          units[input$units, 'dist'])
+  })
+  
+  output$plot <- renderPlot({
     if(input$units == 1) {
-      speedUnit = "km/h"
-      distUnit = "m"
+      x = cars$speed * 1.609344
+      y = cars$dist * 0.3048
     } else {
-      speedUnit = "mph"
-      distUnit = "ft"
+      x = cars$speed
+      y = cars$dist
     }
     
-    paste('And old car at <span style="font-weight: bold;">', 
-          input$speed, 
-          '</span> ', 
-          speedUnit, 
-          ' will stop in <h3 style="display: inline-block;">', 
-          round(getStopDist(), 2), 
-          '</h3> ', 
-          distUnit)  
+    lim.x = max(x, input$speed)
+    lim.y = max(y, getStopDist())
+    
+    plot(x, y, 
+      xlab=paste0("speed (", units[input$units, "speed"], ")"), 
+      ylab=paste0("distance (", units[input$units, "dist"],")"),
+      xlim=c(0, lim.x),
+      ylim=c(0, lim.y)
+    )
+    
+    lines(c(input$speed, input$speed, -10), c(-10, getStopDist(), getStopDist()), col="red")
+    points(input$speed, getStopDist(), pch=19, col="red", lwd=2)
   })
 })

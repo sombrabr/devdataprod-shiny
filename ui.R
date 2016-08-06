@@ -13,13 +13,14 @@ shinyUI(fluidPage(
   
   # Application title
   titlePanel("Old car stop distance"),
-
+  
+  p("This application will estimate an old car stop distance from its speed. The model was built from a 1920's speed x stop distance dataset, from the R datasets' library."),
+  p("The model is more or less accurate until 25 mph."),
+  p("To use the application, select the units you want to use and type the speed in the text input box. The result will appear at the right panel with a plot pointing the result in relation to the cars in the dataset."),
+  
   # Sidebar to choose the units and the speed
   sidebarLayout(
     sidebarPanel(
-      p("This application will estimate an old car stop distance from its speed. The model was built from a 1920's speed x stop distance dataset, from the R datasets' library."),
-      p("The model is more or less accurate until 25 mph."),
-      p("To use the application, select the units you want to use and type the speed in the text input box. The result will appear at the right panel."),
       radioButtons("units", label = h3("Units"),
                    choices = list("metric" = 1, "imperial" = 2), 
                    selected = 2),
@@ -28,7 +29,8 @@ shinyUI(fluidPage(
 
     # Show the estimated stop distance
     mainPanel(
-      htmlOutput("result")
+      htmlOutput("result"),
+      plotOutput("plot")
     )
   )
 ))
