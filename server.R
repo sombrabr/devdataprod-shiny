@@ -77,7 +77,9 @@ shinyServer(function(input, output) {
           units[input$units, 'dist'])
   })
   
+  # Creates the plot
   output$plot <- renderPlot({
+    # Calculate the x and y values to show at the plot as the selected units
     if(input$units == 1) {
       x = cars$speed * 1.609344
       y = cars$dist * 0.3048
@@ -86,9 +88,11 @@ shinyServer(function(input, output) {
       y = cars$dist
     }
     
+    # Defines the limits of the plot
     lim.x = max(x, input$speed)
     lim.y = max(y, getStopDist())
     
+    # Plots the cars dataset
     plot(x, y, 
       xlab=paste0("speed (", units[input$units, "speed"], ")"), 
       ylab=paste0("distance (", units[input$units, "dist"],")"),
@@ -96,6 +100,7 @@ shinyServer(function(input, output) {
       ylim=c(0, lim.y)
     )
     
+    # Plots the calculated speed x distance
     lines(c(input$speed, input$speed, -10), c(-10, getStopDist(), getStopDist()), col="red")
     points(input$speed, getStopDist(), pch=19, col="red", lwd=2)
   })
